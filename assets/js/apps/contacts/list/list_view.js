@@ -49,8 +49,15 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
     className: "table table-hover", //added some styling class, so that Bootstrap will style it for us
     template: "#contact-list",	//we’ve specified the template our CompositeView should use
     itemView: List.Contact,
-    itemViewContainer: "tbody" 	//we’ve told the CompositeView to render the child views within the tbody element
+    itemViewContainer: "tbody", 	//we’ve told the CompositeView to render the child views within the tbody element
     							//For more complex scenarios where you need more control on where/how to insert the rendered child views, 
     							//you can override the appendHtml function in your CompositeView.
+
+    //this method is triggered automatically when the itemview:contact:delete event is being fired (see list_controller)
+    onItemviewContactDelete: function(){
+      this.$el.fadeOut(1000, function(){
+        $(this).fadeIn(1000);
+      });
+    }
   });
 });
