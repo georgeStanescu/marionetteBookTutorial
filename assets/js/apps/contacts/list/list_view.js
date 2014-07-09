@@ -9,15 +9,36 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
     tagName: "tr",
     template: "#contact-list-item",
     events:{
-    	'click':'highlightName'
+    	'click':'highlightName',
+      'click td': 'showCellContent',
+      'click button.js-delete': 'onDeleteContact'  //the delete button is identified by the CSS selector
     },
+    //override remove to animate the removed child item views
+    //the fadeOut callback removes the DOM element once it's done fading out
+    remove: function(){
+      var self = this;
+      this.$el.fadeOut(function(){
+        Marionette.ItemView.prototype.remove.call(self);
+          //calls the original remove function as if we hadn’t redefined it. This translates to:
+            //1. Get the ItemView “class” definition with Marionette.ItemView.prototype
+            //2. Refer to the remove function defined on the “class”
+            //3. Call the remove method, telling it to use the value in self when refering to this within the remove function’s definition
+      });
+    },
+
     highlightName: function(e){
-    	//e.preventDefault(); //preventing the default actionto happen
     	this.$el.toggleClass('warning');
     		//each view has an $el attribute returning a jQuery object wrapping the view’s DOM element: 
     		//this.$el is equivalent to $(this.el)
     		//in order to toggle the “warning” class on our tr containing the clicked item view
     		//we simply call jQuery’s toggleClass method on the view’s jQuery object.
+    },
+    showCellContent: function(arg){
+      alert('You have selected: ' + $(arg.target).text());
+    },
+    onDeleteContact: function(arg){
+      arg.stopPropagation(); // this will prevent the default action to be triggered(hightlight in this case)
+      this.trigger("contact:delete", this.model);
     }
   });
 
