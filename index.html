@@ -12,7 +12,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <span class="brand" href="#">Contact manager</span>
+          <span class="brand">Contact manager</span>
         </div>
       </div>
     </div>
@@ -22,13 +22,7 @@
     </div>
 
     <script type="text/template" id="contact-list-item">
-      <%= firstName %> <%= lastName %>
-    </script>
-      
-    
-
-    <script type="text/template" id="contact-template">
-      <p><%= firstName %> <%= lastName %></p>
+      <p><%- firstName %> <%- lastName %></p>
     </script>
 
     <script src="./assets/js/vendor/jquery.js"></script>
@@ -36,70 +30,14 @@
     <script src="./assets/js/vendor/underscore.js"></script>
     <script src="./assets/js/vendor/backbone.js"></script>
     <script src="./assets/js/vendor/backbone.marionette.js"></script>
-    
+
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/entities/contact.js"></script>
+    <script src="./assets/js/apps/contacts/list/list_view.js"></script>
+    <script src="./assets/js/apps/contacts/list/list_controller.js"></script>
+
     <script type="text/javascript">
-      var ContactManager = new Marionette.Application();
-
-      ContactManager.addRegions({
-        mainRegion: "#main-region"
-      });
-
-      ContactManager.Contact = Backbone.Model.extend();
-
-      ContactManager.ContactCollection = Backbone.Collection.extend({
-        model: ContactManager.Contact,
-        comparator: function(contact1,contact2){
-          if (contact1.get('firstName')<contact2.get('firstName')) return -1;
-          else if (contact1.get('firstName')===contact2.get('firstName')){
-            if (contact1.get('lastName')<contact2.get('lastName')) return -1
-              else return 1;
-          }
-          return 1;
-        }
-      });
-
-      ContactManager.ContactItemView = Marionette.ItemView.extend({
-        template: "#contact-list-item"
-      });
-
-      ContactManager.ContactsView = Marionette.CollectionView.extend({
-          tagName: "ul",
-          itemView: ContactManager.ContactItemView
-      });
-    
-      ContactManager.on("initialize:after", function(){
-        var contacts = new ContactManager.ContactCollection([
-          {
-            firstName: "Bob",
-            lastName: "Brigham",
-            phoneNumber: "555-0163"
-          },
-          {
-            firstName: "Alice",
-            lastName: "Smith",
-            phoneNumber: "555-0185"
-          },
-          {
-            firstName: "Alice",
-            lastName: "Arten",
-            phoneNumber: "555-0184"
-          },
-          {
-            firstName: "Charlie",
-            lastName: "Campbell",
-            phoneNumber: "555-0129"
-          }
-        ]);
-        
-        var contactsListView = new ContactManager.ContactsView({
-          collection: contacts
-        });
-        
-        ContactManager.mainRegion.show(contactsListView);
-      });
-
       ContactManager.start();
     </script>
-
   </body>
 </html>
