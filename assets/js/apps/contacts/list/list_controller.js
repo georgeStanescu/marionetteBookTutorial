@@ -6,6 +6,8 @@
 //while keeping them within the same Marionette sub-module
 ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbone, Marionette, $, _){
   List.Controller = {
+  	//within the controller we’ll put all the functions we intend to be publicly available
+    //these public methods will typically be the ones that are triggered by entering URLs into the address bar
     listContacts: function(){
 
     	//make a request to retrieve the contacts
