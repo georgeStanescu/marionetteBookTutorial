@@ -21,13 +21,11 @@
       <p>Here is static content in the web page. You'll notice that it gets replaced by our app as soon as we start it.</p>
     </div>
 
-    <script type="text/template" id="different-static-template">
-      <p>Text from a different template...</p>
+    <script type="text/template" id="contact-list-item">
+      <%= firstName %> <%= lastName %>
     </script>
-
-    <script type="text/template" id="list-item-template">
-      <li>One item</li>
-    </script>
+      
+    
 
     <script type="text/template" id="contact-template">
       <p><%= firstName %> <%= lastName %></p>
@@ -42,51 +40,51 @@
     <script type="text/javascript">
       var ContactManager = new Marionette.Application();
 
-      ContactManager.Contact = Backbone.Model.extend({
-        defaults: {
-          firstName: "",
-          phoneNumber: 'No phone number!'
-        }
-      });
-    
       ContactManager.addRegions({
         mainRegion: "#main-region"
       });
 
-      ContactManager.ContactView = Marionette.ItemView.extend({
-        template: "#contact-template",
-        events: {
-          "click p": "alertPhoneNumber"
-        },
-        alertPhoneNumber: function(){
-          alert(this.model.escape('phoneNumber'));
-        }
+      ContactManager.Contact = Backbone.Model.extend();
+
+      ContactManager.ContactCollection = Backbone.Collection.extend({
+        model: ContactManager.Contact
+      });
+
+      ContactManager.ContactItemView = Marionette.ItemView.extend({
+        template: "#contact-list-item"
+      });
+
+      ContactManager.ContactsView = Marionette.CollectionView.extend({
+          tagName: "ul",
+          itemView: ContactManager.ContactItemView
       });
     
       ContactManager.on("initialize:after", function(){
+        var contacts = new ContactManager.ContactCollection([
+          {
+            firstName: "Bob",
+            lastName: "Brigham",
+            phoneNumber: "555-0163"
+          },
+          {
+            firstName: "Alice",
+            lastName: "Arten",
+            phoneNumber: "555-0184"
+          },
+          {
+            firstName: "Charlie",
+            lastName: "Campbell",
+            phoneNumber: "555-0129"
+          }
+        ]);
         
-        var alice = new ContactManager.Contact({
-          firstName: "Alice",
-          lastName: "Arten",
-          phoneNumber: "555-0184"
+        var contactsListView = new ContactManager.ContactsView({
+          collection: contacts
         });
         
-        var bob = new ContactManager.Contact({
-          firstName: 'Bob',
-          lastName: 'Marley'
-        });
-    
-        var aliceView = new ContactManager.ContactView({
-          model: alice
-        });
-        var bobView = new ContactManager.ContactView({
-          model: bob
-        })
-
-        //ContactManager.mainRegion.show(aliceView);
-        ContactManager.mainRegion.show(bobView);
+        ContactManager.mainRegion.show(contactsListView);
       });
-      
+
       ContactManager.start();
     </script>
 
