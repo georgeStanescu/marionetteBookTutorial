@@ -39,11 +39,27 @@
       <td>
         <!--the style and icon will be taken from bootstrap library-->
         <!--the js- prefixed class differentiates between the CSS classes used for styling, and those used as selectors by the javascript functionality-->
-      <button class="btn btn-small js-delete">
-        <i class="icon-remove"></i>
-        Delete
-      </button>
+        <button class="btn btn-small js-delete">
+          <i class="icon-remove"></i>
+          Delete
+        </button>
+
+        <!--We will prevent the browser from navigating to the URL.
+         However the anchor enables our application to behave as expected: users can open links in new tabs, save link locations--!> 
+        <a href="#" class="btn btn-small js-show">
+          <i class="icon-eye-open"></i>
+          Show
+        </a>
       </td>   
+    </script>
+
+    <script type="text/template" id="contact-view">
+      <h1>
+        <%= firstName %> <%= lastName %>
+      </h1>
+      <p>
+        <strong>Phone number:</strong> <%= phoneNumber %>
+      </p>
     </script>
 
     <script src="./assets/js/vendor/jquery.js"></script>
@@ -56,6 +72,8 @@
     <script src="./assets/js/entities/contact.js"></script>
     <script src="./assets/js/apps/contacts/list/list_view.js"></script>
     <script src="./assets/js/apps/contacts/list/list_controller.js"></script>
+    <script src="./assets/js/apps/contacts/show/show_view.js"></script>
+    <script src="./assets/js/apps/contacts/show/show_controller.js"></script>
 
     <script type="text/javascript">
       ContactManager.start();

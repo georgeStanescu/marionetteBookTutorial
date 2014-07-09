@@ -11,7 +11,8 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
     events:{
     	'click':'highlightName',
       'click td': 'showCellContent',
-      'click button.js-delete': 'onDeleteContact'  //the delete button is identified by the CSS selector
+      'click button.js-delete': 'onDeleteContact', //the delete button is identified by the CSS selector
+      "click td a.js-show": "showClicked"
     },
     //override remove to animate the removed child item views
     //the fadeOut callback removes the DOM element once it's done fading out
@@ -37,9 +38,14 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
       alert('You have selected: ' + $(arg.target).text());
     },
     onDeleteContact: function(arg){
-      arg.stopPropagation(); // this will prevent the default action to be triggered(hightlight in this case)
+      arg.stopPropagation(); //prevent the event from bubbling up in the DOM and getting our row highlighted
       this.trigger("contact:delete", this.model);
-    }
+    },
+    showClicked: function(e){
+      e.preventDefault();   // we need to prevent the browser from navigating to the link’s location (see index page)
+      e.stopPropagation();  // prevent the event from bubbling up in the DOM and getting our row highlighted
+      this.trigger("contact:show", this.model);
+    },
   });
 
   //CompositeView is used for scenarios where a collection needs to be rendered within a wrapper template
