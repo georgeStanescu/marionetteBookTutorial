@@ -7,7 +7,8 @@ ContactManager.module("ContactsApp", function(ContactsApp, ContactManager, Backb
     appRoutes: {
     	//list contacts function specified in the appRoutes object above must exist in the router’s controller (API)
       	"contacts": "listContacts",
-      	"contacts/:id": "showContact"
+      	"contacts/:id": "showContact",
+        "contacts/:id/edit": "editContact"
     }
   });
    
@@ -19,6 +20,9 @@ ContactManager.module("ContactsApp", function(ContactsApp, ContactManager, Backb
     showContact: function(id){
     	//we extract the contact’s id from the URL, we send it on to our trusty Show controller to display the data
     	ContactsApp.Show.Controller.showContact(id);
+    },
+    editContact: function(id){
+      ContactsApp.Edit.Controller.editContact(id);
     }
   };
 
@@ -31,6 +35,11 @@ ContactManager.module("ContactsApp", function(ContactsApp, ContactManager, Backb
 	  ContactManager.navigate("contacts/" + id);
 	  API.showContact(id);
 	});
+
+  ContactManager.on("contact:edit", function(id){
+    ContactManager.navigate("contacts/" + id + "/edit");
+    API.editContact(id);
+  });
   
   //addInitializer: the provided function will be executed WHEN the application is running
   //initialize-after event is triggered after the application is running
