@@ -20,7 +20,8 @@ ContactManager.getCurrentRoute = function(){
 ContactManager.on("initialize:after", function(){
   if(Backbone.history){
     Backbone.history.start();
-    	//When using pushState, URL fragments look like the usual “/contacts/3” instead of “#contacts/3”
+    	//When using pushState :Backbone.history.start({pushState: true});, 
+    	//URL fragments look like the usual “/contacts/3” instead of “#contacts/3”
     	//to use pushState in your application your server has to respond to that URL
     
     //if the user comes to our app at the root URL, let’s redirect him to “#contacts”
@@ -32,10 +33,11 @@ ContactManager.on("initialize:after", function(){
     		//the first two lines can be replaced by: Backbone.history.navigate("contacts", {trigger: true});
     		//	or by the next two lines:
 
-    	this.navigate("contacts"); //equivalent to ContactManager.navigate("contacts");
-    	ContactManager.ContactsApp.List.Controller.listContacts();
+    	//this.navigate("contacts"); //equivalent to ContactManager.navigate("contacts");
+    	//ContactManager.ContactsApp.List.Controller.listContacts();
+    		//replaced by:
 
-      	//ContactManager.trigger("contacts:list");
+      	ContactManager.trigger("contacts:list");
     }
   }
 });
