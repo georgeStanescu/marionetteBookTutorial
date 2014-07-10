@@ -26,8 +26,11 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
       });
 
       contactsListView.on("itemview:contact:show", function(childView, model){
-        ContactManager.navigate("contacts/" + model.get("id"));
-        ContactManager.ContactsApp.Show.Controller.showContact(model);
+        //ContactManager.navigate("contacts/" + model.get("id"));
+        //ContactManager.ContactsApp.Show.Controller.showContact(model);
+          //the two lines are equivalent to:
+
+        ContactManager.trigger("contact:show", model.get("id"));
       });
 
       ContactManager.mainRegion.show(contactsListView);
