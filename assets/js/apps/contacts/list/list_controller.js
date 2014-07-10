@@ -21,8 +21,8 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbon
 
       //When an item view within a collection view triggers an event,
       //that event will bubble up through the parent collection view with “itemview:” prepended to the event name.
-      contactsListView.on("itemview:contact:delete", function(childView,model){
-        childView.remove(model); //same as: contacts.remove(model);
+      contactsListView.on("itemview:contact:delete", function(childView, model){
+        model.destroy();
       });
 
       contactsListView.on("itemview:contact:show", function(childView, model){
