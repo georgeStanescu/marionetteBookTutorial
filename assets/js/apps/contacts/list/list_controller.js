@@ -4,36 +4,39 @@
 
 //We can have our controller and views defined in separate files, 
 //while keeping them within the same Marionette sub-module
-ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbone, Marionette, $, _){
+ContactManager.module("ContactsApp.List", function(List, ContactManager,
+Backbone, Marionette, $, _){
   List.Controller = {
-  	//within the controller we’ll put all the functions we intend to be publicly available
+    //within the controller we’ll put all the functions we intend to be publicly available
     //these public methods will typically be the ones that are triggered by entering URLs into the address bar
     listContacts: function(){
+      //make a request to retrieve the contacts
+      var fetchingContacts = ContactManager.request("contact:entities");
 
-    	//make a request to retrieve the contacts
-    	var contacts = ContactManager.request("contact:entities");
+      $.when(fetchingContacts).done(function(contacts){
+        //Defining this code within the same ContactsApp.List sub-module,
+        //we can refer to our views (which are also defined within a ContactsApp.List sub-module) 
+        var contactsListView = new List.Contacts({
+          collection: contacts
+        });
 
-    	//Defining this code within the same ContactsApp.List sub-module,
-    	//we can refer to our views (which are also defined within a ContactsApp.List sub-module)
-	    var contactsListView = new List.Contacts({
-	      collection: contacts
-	    });
+        contactsListView.on("itemview:contact:show",
+        function(childView, model){
+          //ContactManager.navigate("contacts/" + model.get("id"));
+          //ContactManager.ContactsApp.Show.Controller.showContact(model);
+            //the two lines are equivalent to:
+          ContactManager.trigger("contact:show", model.get("id"));
+        });
 
-      //When an item view within a collection view triggers an event,
-      //that event will bubble up through the parent collection view with “itemview:” prepended to the event name.
-      contactsListView.on("itemview:contact:delete", function(childView, model){
-        model.destroy();
+        //When an item view within a collection view triggers an event,
+        //that event will bubble up through the parent collection view with “itemview:” prepended to the event name.
+        contactsListView.on("itemview:contact:delete",
+        function(childView, model){
+          model.destroy();
+        });
+
+        ContactManager.mainRegion.show(contactsListView);
       });
-
-      contactsListView.on("itemview:contact:show", function(childView, model){
-        //ContactManager.navigate("contacts/" + model.get("id"));
-        //ContactManager.ContactsApp.Show.Controller.showContact(model);
-          //the two lines are equivalent to:
-
-        ContactManager.trigger("contact:show", model.get("id"));
-      });
-
-      ContactManager.mainRegion.show(contactsListView);
     }
   }
 });

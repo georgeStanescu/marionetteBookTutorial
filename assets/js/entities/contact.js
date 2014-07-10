@@ -40,23 +40,53 @@ ContactManager.module("Entities", function(Entities, ContactManager, Backbone, M
     contacts.forEach(function(contact){
       contact.save();
     });
-    return contacts;
+    return contacts.models;
   };
 
   var API = {
-    getContactEntities: function(){
-      var contacts = new Entities.ContactCollection();
-      contacts.fetch();
-      if(contacts.length === 0){
-        // if we don't have any contacts yet, create some for convenience
-        return initializeContacts();
-      }
-      return contacts;
-    },
     getContactEntity: function(contactId){
       var contact = new Entities.Contact({id: contactId});
-      contact.fetch();
-      return contact;
+      var defer = $.Deferred();
+        //we use a deferred object to return a promise from our “contact:entity” handler
+        //jquery deferred object is essentially “something that will happen later”
+        //it can register multiple callbacks into callback queues, invoke callback queues
+        // and relay the success or failure state of any synchronous or asynchronous function
+      setTimeout(function(){
+        contact.fetch({
+          success: function(data){
+            defer.resolve(data);
+              //if it’s not possible to load the requested contact, we’ll simply return undefined in our handler
+          },
+          error: function(data){
+            defer.resolve(undefined);
+          }
+        });
+      }, 2000);
+      return defer.promise();
+          //allows code elsewhere to simply monitor the promise and react appropriately to any changes (e.g. fresh data coming in)
+          //promise() method allows an asynchronous function to prevent other code from interfering 
+          //with the progress or status of its internal request
+    },
+    getContactEntities: function(){
+      var contacts = new Entities.ContactCollection();
+      var defer = $.Deferred();
+      contacts.fetch({
+        success: function(data){
+          defer.resolve(data);
+        }
+      });
+      var promise = defer.promise();
+      $.when(promise).done(function(contacts){
+        if(contacts.length === 0){
+          // if we don't have any contacts yet, create some for convenience
+          var models = initializeContacts();
+          //all models in the collection are removed, and replaced by the models provided
+          contacts.reset(models);
+            //Any time you cause a collection to change (filtering the models to display, changing the sorting order, etc.), 
+            //you can force a collection/composite view to rerender the entire collection by calling myCollection.trigger("reset")
+        }
+      });
+      return promise;
     }
   };
 
