@@ -28,6 +28,33 @@ Backbone, Marionette, $, _){
           ContactManager.trigger("contact:show", model.get("id"));
         });
 
+        contactsListView.on("itemview:contact:edit", function(childView, model){
+          //create a view instance
+          var view = new ContactManager.ContactsApp.Edit.Contact({
+            model: model,
+            asModal: true
+          });
+
+          view.on("form:submit", function(data){
+            //try to update the model
+            if(model.save(data)){
+              childView.render();
+                //once the view gets rerendered, the model’s data is serialized and provided to the template again. 
+                //In other words, we’ll see the new data values displayed.
+              
+              ContactManager.dialogRegion.close(); //we close the dialogRegion and Marionette takes care of closing the view it contains
+              childView.flash("success");
+            }
+            else{
+              //displaying the errors on the form
+              view.triggerMethod("form:data:invalid", model.validationError);
+            }
+          });
+
+          //show the view within the dialogRegion
+          ContactManager.dialogRegion.show(view);
+        });
+
         //When an item view within a collection view triggers an event,
         //that event will bubble up through the parent collection view with “itemview:” prepended to the event name.
         contactsListView.on("itemview:contact:delete",

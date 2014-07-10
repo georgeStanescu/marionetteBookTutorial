@@ -1,7 +1,8 @@
 var ContactManager = new Marionette.Application();
 
 ContactManager.addRegions({
-  mainRegion: "#main-region"
+  mainRegion: "#main-region",
+  dialogRegion: "#dialog-region"
 });
 
 //navigate doesn’t just change the URL fragment, it also adds the new URL to the browser’s history. 

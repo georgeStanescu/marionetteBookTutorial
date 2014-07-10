@@ -5,6 +5,7 @@
     <title>Marionette Contact Manager</title>
     <link href="./assets/css/bootstrap.css" rel="stylesheet">
     <link href="./assets/css/application.css" rel="stylesheet">
+    <link href="./assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet">
   </head>
 
   <body>
@@ -20,6 +21,8 @@
     <div id="main-region" class="container">
       <p>Here is static content in the web page. You'll notice that it gets replaced by our app as soon as we start it.</p>
     </div>
+
+    <div id="dialog-region"></div>
 
     <script type="text/template" id="contact-list">
       <thead>
@@ -50,6 +53,10 @@
           <i class="icon-eye-open"></i>
           Show
         </a>
+        <a href="#contacts/<%= id %>/edit" class="btn btn-small js-edit">
+          <i class="icon-pencil"></i>
+          Edit
+        </a>
       </td>   
     </script>
 
@@ -79,7 +86,6 @@
     </script>
 
     <script type="text/template" id="contact-form">
-      <h1>Edit <%= firstName %> <%= lastName %></h1>
       <form>
         <div class="control-group">
           <label for="contact-firstName" class="control-label">
@@ -113,6 +119,7 @@
     </script>
 
     <script src="./assets/js/vendor/jquery.js"></script>
+    <script src="./assets/js/vendor/jquery-ui-1.10.3.js"></script>
     <script src="./assets/js/vendor/json2.js"></script>
     <script src="./assets/js/vendor/underscore.js"></script>
     <script src="./assets/js/vendor/backbone.js"></script>
