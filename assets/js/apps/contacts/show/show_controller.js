@@ -3,7 +3,11 @@ ContactManager.module("ContactsApp.Show", function(Show, ContactManager,Backbone
   	//the controller receives an id as the argument 
 	showContact: function(id){
 		//create a new loading view and display it.
-		var loadingView = new ContactManager.Common.Views.Loading();
+		var loadingView = new ContactManager.Common.Views.Loading({
+			//Passing view parameters on instantiation
+			title: "Artificial Loading Delay",
+	        message: "Data loading is delayed to demonstrate using a loading view."
+		});
 	    ContactManager.mainRegion.show(loadingView);
 
 	  var fetchingContact = ContactManager.request("contact:entity", id); //we get the promise returned by our handler
