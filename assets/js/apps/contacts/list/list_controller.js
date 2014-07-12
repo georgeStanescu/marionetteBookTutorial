@@ -4,20 +4,33 @@
 
 //We can have our controller and views defined in separate files, 
 //while keeping them within the same Marionette sub-module
-ContactManager.module("ContactsApp.List", function(List, ContactManager,
-Backbone, Marionette, $, _){
+ContactManager.module("ContactsApp.List", function(List, ContactManager,Backbone, Marionette, $, _){
   List.Controller = {
     //within the controller we’ll put all the functions we intend to be publicly available
     //these public methods will typically be the ones that are triggered by entering URLs into the address bar
     listContacts: function(){
+      //Updating the controller to use a layout
+      var loadingView = new ContactManager.Common.Views.Loading();
+      ContactManager.mainRegion.show(loadingView);
+
       //make a request to retrieve the contacts
       var fetchingContacts = ContactManager.request("contact:entities");
+
+      //We instantiate our new views
+      var contactsListLayout = new List.Layout();
+      var contactsListPanel = new List.Panel();
 
       $.when(fetchingContacts).done(function(contacts){
         //Defining this code within the same ContactsApp.List sub-module,
         //we can refer to our views (which are also defined within a ContactsApp.List sub-module) 
         var contactsListView = new List.Contacts({
           collection: contacts
+        });
+
+        //we instruct our layout to display the proper views within the previously declared regions, as soon as the layout itself is displayed
+        contactsListLayout.on("show", function(){
+          contactsListLayout.panelRegion.show(contactsListPanel);
+          contactsListLayout.contactsRegion.show(contactsListView);
         });
 
         contactsListView.on("itemview:contact:show",
@@ -63,6 +76,8 @@ Backbone, Marionette, $, _){
         });
 
         ContactManager.mainRegion.show(contactsListView);
+        //we display the layout
+        ContactManager.mainRegion.show(contactsListLayout);
       });
     }
   }

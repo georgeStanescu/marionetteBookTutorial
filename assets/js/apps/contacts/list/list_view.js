@@ -5,6 +5,22 @@
 //When defining sub-modules using the dot-notation, the parent modules do not need to exist. 
 //They will be created for you if they don’t exist
 ContactManager.module("ContactsApp.List", function(List, ContactManager, Backbone, Marionette, $, _){
+  //layouts are used for rendering an application layout with multiple sub-regions to be managed by specified region managers.
+    //A layout manager can also be used as a composite-view to aggregate multiple views 
+    //and sub-application areas of the screen where multiple region managers need to be attached to dynamically rendered HTML.
+  List.Layout = Marionette.Layout.extend({
+    template: "#contact-list-layout",
+    
+    //we define our regions within the layout and we provide DOM ids that are present within our template
+    regions: {
+      panelRegion: "#panel-region",
+      contactsRegion: "#contacts-region"
+    }
+  });
+  List.Panel = Marionette.ItemView.extend({
+    template: "#contact-list-panel"
+  });
+
   List.Contact = Marionette.ItemView.extend({
     tagName: "tr",
     template: "#contact-list-item",
