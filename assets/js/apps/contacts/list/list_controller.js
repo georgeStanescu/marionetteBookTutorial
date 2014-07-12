@@ -33,6 +33,34 @@ ContactManager.module("ContactsApp.List", function(List, ContactManager,Backbone
           contactsListLayout.contactsRegion.show(contactsListView);
         });
 
+        contactsListPanel.on("contact:new", function(){
+          var newContact = new ContactManager.Entities.Contact();
+
+          var view = new ContactManager.ContactsApp.New.Contact({
+            model: newContact,
+            asModal: true
+          });
+
+          view.on("form:submit", function(data){
+            // This would normally be done by the server, but we don’t have one. So we determine the highest id currently in use
+            var highestId = contacts.max(function(c){ return c.id; });
+            highestId = highestId.get("id");
+            data.id = highestId + 1;
+            if(newContact.save(data)){
+              //if the data is valid, we add the new model to the collection and close the dialog region
+              contacts.add(newContact); //makes Marionette render a new item view to display the created model instance
+              ContactManager.dialogRegion.close();
+              contactsListView.children.findByModel(newContact).flash("success");
+            }
+            else{
+              //If the data isn’t valid, we trigger the form’s method so it will display the error messages
+              view.triggerMethod("form:data:invalid",newContact.validationError);
+            }
+          });
+          //we display our “new contact”
+          ContactManager.dialogRegion.show(view);
+        });
+
         contactsListView.on("itemview:contact:show",
         function(childView, model){
           //ContactManager.navigate("contacts/" + model.get("id"));

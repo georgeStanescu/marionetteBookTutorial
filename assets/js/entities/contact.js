@@ -16,6 +16,12 @@ ContactManager.module("Entities", function(Entities, ContactManager, Backbone, M
   //We’ve attached our model and collection as attributes to the module
   Entities.Contact = Backbone.Model.extend({
     urlRoot: "contacts",
+    
+    defaults: {
+      firstName: "",
+      lastName: "",
+      phoneNumber: ""
+    },
 
     validate: function(attrs, options) {
       var errors = {}
